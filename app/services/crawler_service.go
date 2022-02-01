@@ -2,6 +2,7 @@ package services
 
 import (
 	"crawler/app/entity"
+	"crawler/app/repositories"
 	"fmt"
 
 	"github.com/gocolly/colly/v2"
@@ -21,6 +22,8 @@ func GenerateCrawler(host string) string {
 		}
 
 		articles = append(articles, *article)
+		articlesRepository := repositories.NewArticleRepository(articles)
+		articlesRepository.Store()
 	})
 
 	collection.OnHTML(".next a", func(h *colly.HTMLElement) {
