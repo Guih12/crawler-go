@@ -4,6 +4,7 @@ import (
 	"crawler/app/database"
 	"crawler/app/entity"
 	"crawler/app/observer"
+	"log"
 )
 
 type ArticlesRepository struct {
@@ -18,6 +19,23 @@ func (articlesRepository ArticlesRepository) Store() {
 			observer.ObserverArticle()
 		}
 	}
+}
+
+func GetAllArticles() []entity.Article {
+	database, _ := database.Connect()
+
+	rows, erro := database.Query("SELECT * FROM articles")
+
+	articles := make([]entity.Article, 0)
+	for rows.Next() {
+		var article entity.Article
+		if erro = rows.Scan(&article.ID, &article.Phrase, &article.Author); erro != nil {
+			log.Fatal(erro)
+		}
+		articles = append(articles, article)
+	}
+
+	return articles
 }
 
 func persist(article *entity.Article) bool {
