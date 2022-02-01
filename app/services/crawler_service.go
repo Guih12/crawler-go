@@ -22,7 +22,7 @@ func GenerateCrawler(host string) string {
 		}
 
 		articles = append(articles, *article)
-		articlesRepository := repositories.NewArticleRepository(articles)
+		articlesRepository := &repositories.ArticlesRepository{Articles: articles}
 		articlesRepository.Store()
 	})
 
@@ -36,6 +36,5 @@ func GenerateCrawler(host string) string {
 	})
 
 	collection.Visit(host)
-
 	return "Crawler gerado com sucesso"
 }
